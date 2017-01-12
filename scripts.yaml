@@ -1,1 +1,2 @@
 nomotiontimer: !include scripts/nomotiontimer.yaml
+updateconfig: !include scripts/updateconfig.yaml
