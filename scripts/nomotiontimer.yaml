@@ -1,0 +1,7 @@
+alias: "No Motion For 1 Hour"
+sequence:
+- delay:
+    minutes: 60
+- service: homeassistant.turn_off
+  data:
+    entity_id: light.rgb_gang_lys
