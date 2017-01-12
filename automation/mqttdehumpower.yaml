@@ -1,0 +1,11 @@
+alias: Publish Dehumidifier Power
+hide_entity: True
+trigger:
+  platform: state
+  entity_id: sensor.greenwave_powernode_1_port_previous_reading_5_9
+action:
+  - service: mqtt.publish
+    data:
+      topic: "unit/dehumidifierpower"
+      payload_template: "{{ states('sensor.greenwave_powernode_1_port_previous_reading_5_9') }}"
+      retain: "true" 
