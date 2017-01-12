@@ -1,0 +1,14 @@
+alias: 'Arm Alarm'
+hide_entity: True
+trigger:
+  platform: state
+  entity_id: input_boolean.arm_alarm
+  to: 'on'
+action:
+  - service: alarm_control_panel.alarm_arm_away
+    entity_id: alarm_control_panel.alarm
+    data:
+      code: 6666
+  - service: input_boolean.turn_off
+    data:
+      entity_id: input_boolean.arm_alarm
