@@ -1,0 +1,16 @@
+alias: Publish MQTT temp and humidity
+hide_entity: True
+trigger:
+  platform: state
+  entity_id: sensor.dht_sensor_temperature, sensor.dht_sensor_humidity
+action:
+  - service: mqtt.publish
+    data:
+      topic: "unit/temperature"
+      payload_template: "{{ states('sensor.dht_sensor_temperature') }}"    
+      retain: "true"
+   - service: mqtt.publish
+     data:
+       topic: "unit/humidity"
+       payload_template: "{{ states('sensor.dht_sensor_humidity') }}"
+       retain: "true"
