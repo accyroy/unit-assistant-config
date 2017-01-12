@@ -110,11 +110,11 @@ http:
 
 group:
   allmotion:
-  name: Motion
-  view: yes
-  entities:
-    - binary_sensor.aeotec_zw100_multisensor_6_sensor_2_0
-    - binary_sensor.aeotec_zw100_multisensor_6_sensor_6_0
+    name: Motion
+    view: yes
+    entities:
+      - binary_sensor.aeotec_zw100_multisensor_6_sensor_2_0
+      - binary_sensor.aeotec_zw100_multisensor_6_sensor_6_0
     
 # Checks for available updates
 #updater:
