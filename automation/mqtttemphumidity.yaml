@@ -9,8 +9,8 @@ action:
       topic: "unit/temperature"
       payload_template: "{{ states('sensor.dht_sensor_temperature') }}"    
       retain: "true"
-   - service: mqtt.publish
-     data:
-       topic: "unit/humidity"
-       payload_template: "{{ states('sensor.dht_sensor_humidity') }}"
-       retain: "true"
+  - service: mqtt.publish
+    data:
+      topic: "unit/humidity"
+      payload_template: "{{ states('sensor.dht_sensor_humidity') }}"
+      retain: "true"
