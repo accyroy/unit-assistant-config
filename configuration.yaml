@@ -172,9 +172,12 @@ sensor:
     - humidity
 
 input_boolean:
-  arm_alarm:
-    name: Arm The Alarm
-    initial: off
+  - arm_alarm:
+      name: Arm The Alarm
+      initial: off
+  - no_motion:
+      name: No Motion 1 Hour
+      initial: off
 
 shell_command:
   get_latest_config: bash /home/homeassistant/.homeassistant/gitpull.sh
@@ -336,9 +339,6 @@ automation:
       data:
         title: 'Unit Alarm Activated by Rear Motion sensor'
         message: 'Unit Alarm activated by Rear motion sensor'
-
-
-
 
 
 - alias: 'Trigger Alarm Armed Home'
