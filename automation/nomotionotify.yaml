@@ -1,0 +1,18 @@
+alias: 'No Motion Notify'
+hide_entity: True
+trigger:
+  - platform: state
+    entity_id: input_boolean.no_motion
+    state: 'on'
+condition:
+  - platform: state
+    entity_id: alarm_control_panel.alarm
+    state: 'disarmed'
+action:
+  - service: notify.email
+    data:
+      title: 'Alert: No Motion, Alarm Disarmed'
+      message: 'Unit alarm is currently disarmed and there has been no motion detected for the last hour.' 
+  - service: input_boolean.turn_off
+    entity_id: input_boolean.no_motion
+  - service: script.nomotiontimer
