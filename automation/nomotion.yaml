@@ -1,7 +1,7 @@
 alias: "No Motion"
 trigger:
   - platform: state
-    enitity_id: group.allmotion
+    entity_id: group.allmotion
     state: "off"
 action:
   service: script.nomotiontimer
