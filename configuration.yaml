@@ -171,13 +171,7 @@ sensor:
     - temperature
     - humidity
 
-input_boolean:
-  - arm_alarm:
-      name: Arm The Alarm
-      initial: off
-  - no_motion:
-      name: No Motion 1 Hour
-      initial: off
+input_boolean: !include input_boolean.yaml
 
 shell_command:
   get_latest_config: bash /home/homeassistant/.homeassistant/gitpull.sh
