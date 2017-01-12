@@ -1,0 +1,6 @@
+arm_alarm:
+  name: Arm The Alarm
+  initial: off
+no_motion:
+  name: No Motion 1 Hour
+  initial: off
