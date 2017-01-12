@@ -196,7 +196,7 @@ alarm_control_panel:
     trigger_time: 10
 
 
-automation:
+automation: !include automation.yaml
 -  alias: Publish MQTT temp and humidity
    hide_entity: True
    trigger:
