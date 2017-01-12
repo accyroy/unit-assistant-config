@@ -1,1 +1,18 @@
+#mqtt publush
+- !include automation/mqtttemphumidity.yaml
+- !include automation/mqttmotionfront.yaml
+- !include automation/mqttmotionrear.yaml
+- !include automation/mqtttempfront.yaml
+- !include automation/mqtttemprear.yaml
+- !include automation/mqtthumfront.yaml
+- !include automation/mqttdehumpower.yaml
+
+#alarm
+- !include automation/alarmtrigfront.yaml
+- !include automation/alarmtrigrear.yaml
+- !include automation/alarmarm.yaml
+- !include automation/alarmnotifyarmed.yaml
+- !include automation/alarmtriggered.yaml
+- !include automation/alarmdisarmed.yaml
+
 - !include automation/nomotion.yaml
