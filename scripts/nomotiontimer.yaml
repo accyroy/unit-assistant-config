@@ -1,7 +1,7 @@
 alias: "No Motion For 1 Hour"
 sequence:
 - delay:
-    minutes: 5
+    minutes: 2
 - service: input_boolean.turn_on
   data:
     entity_id: input_boolean.no_motion
