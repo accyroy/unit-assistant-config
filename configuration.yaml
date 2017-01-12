@@ -109,7 +109,7 @@ http:
   ssl_key: !secret http_ssl_key
 
 group:
-  motion:
+  allmotion:
   name: Motion
   view: yes
   entities:
