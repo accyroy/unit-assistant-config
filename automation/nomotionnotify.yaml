@@ -3,7 +3,7 @@ hide_entity: True
 trigger:
   - platform: state
     entity_id: input_boolean.no_motion
-    state: 'on'
+    to: 'on'
 condition:
   - platform: state
     entity_id: alarm_control_panel.alarm
