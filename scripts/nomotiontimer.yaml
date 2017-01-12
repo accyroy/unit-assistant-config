@@ -1,4 +1,3 @@
-alias: "No Motion For 1 Hour"
 sequence:
 - delay:
     minutes: 2
