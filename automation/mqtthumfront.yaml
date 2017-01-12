@@ -1,0 +1,11 @@
+alias: Publish Humidity Front Door
+hide_entity: True
+trigger:
+  platform: state
+  entity_id: sensor.aeotec_zw100_multisensor_6_relative_humidity_2_5
+action:
+  - service: mqtt.publish
+    data:
+      topic: "unit/frontrh"
+      payload_template: "{{ states('sensor.aeotec_zw100_multisensor_6_relative_humidity_2_5') }}"
+      retain: "true"

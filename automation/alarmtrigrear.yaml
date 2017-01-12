@@ -1,0 +1,22 @@
+alias: 'Trigger Alarm Rear Sensor'
+hide_entity: True
+trigger:
+  - platform: state
+    entity_id: binary_sensor.aeotec_zw100_multisensor_6_sensor_6_0
+    state: 'on'
+condition:
+  condition: or
+  conditions:
+    - condition: state
+      entity_id: alarm_control_panel.alarm
+      state: armed_away
+    - condition: state
+      entity_id: alarm_control_panel.alarm
+      state: armed_home
+action:
+  - service: alarm_control_panel.alarm_trigger
+    entity_id: alarm_control_panel.alarm
+  - service: notify.email
+    data:
+      title: 'Unit Alarm Activated by Rear Motion sensor'
+      message: 'Unit Alarm activated by Rear motion sensor'

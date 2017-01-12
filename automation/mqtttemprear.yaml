@@ -1,0 +1,11 @@
+alias: Publish Temp Rear Door
+hide_entity: True
+trigger:
+  platform: state
+  entity_id: sensor.aeotec_zw100_multisensor_6_temperature_6_1
+action:
+  - service: mqtt.publish
+    data:
+      topic: "unit/reartemp"
+      payload_template: "{{ states('sensor.aeotec_zw100_multisensor_6_temperature_6_1') }}"
+      retain: "true"

@@ -1,0 +1,11 @@
+alias: 'Alarm Armed'
+hide_entity: True
+trigger:
+  - platform: state
+    entity_id: alarm_control_panel.alarm
+    to: 'armed_away'
+action:
+  service: notify.email
+  data:
+    title: 'Unit Alarm Armed'
+    message: 'The alarm has been armed.'

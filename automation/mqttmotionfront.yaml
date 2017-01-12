@@ -1,0 +1,11 @@
+alias: Publish Motion Front
+hide_entity: True
+trigger:
+  platform: state
+  entity_id: sensor.aeotec_zw100_multisensor_6_burglar_2_10
+action:
+  - service: mqtt.publish
+    data:
+      topic: "unit/frontmotion"
+      payload_template: "{{ states('sensor.aeotec_zw100_multisensor_6_burglar_2_10') }}"
+      retain: "true"
