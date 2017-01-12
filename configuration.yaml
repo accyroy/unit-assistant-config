@@ -1,0 +1,403 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: !secret homeassistant_name
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret homeassistant_lat
+  longitude: !secret homeassistant_lon
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: !secret homeassistant_elevation
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/London
+  customize:
+    binary_sensor.aeotec_zw100_multisensor_6_sensor_2_0:
+      hidden: false
+      friendly_name: Front PIR
+      sensor_class: motion
+    binary_sensor.aeotec_zw100_multisensor_6_sensor_6_0:
+      hidden: false
+      friendly_name: Rear PIR
+      sensor_class: motion
+    sensor.aeotec_zw100_multisensor_6_alarm_level_2_1:
+      hidden: true
+    sensor.aeotec_zw100_multisensor_6_alarm_level_6_1:
+      hidden: true
+    sensor.aeotec_zw100_multisensor_6_alarm_type_2_0:
+      hidden: true
+    sensor.aeotec_zw100_multisensor_6_alarm_type_6_0:
+      hidden: true
+    sensor.aeotec_zw100_multisensor_6_burglar_2_10:
+      hidden: true
+      friendly_name: Front PIR State
+    sensor.aeotec_zw100_multisensor_6_burglar_6_10:
+      hidden: true
+      friendly_name: Rear PIR State
+    sensor.aeotec_zw100_multisensor_6_luminance_2_3:
+      hidden: false
+      friendly_name: Front Lux
+    sensor.aeotec_zw100_multisensor_6_luminance_6_3:
+      hidden: false
+      friendly_name: Rear Lux
+    sensor.aeotec_zw100_multisensor_6_relative_humidity_2_5:
+      hidden: false
+      friendly_name: Front Humidity
+    sensor.aeotec_zw100_multisensor_6_relative_humidity_6_5:
+      hidden: false
+      friendly_name: Rear Humidity
+    sensor.aeotec_zw100_multisensor_6_sourcenodeid_2_2:
+      hidden: true
+    sensor.aeotec_zw100_multisensor_6_sourcenodeid_6_2:
+      hidden: true
+    sensor.aeotec_zw100_multisensor_6_temperature_2_1:
+      hidden: false
+      friendly_name: Front Temperature
+    sensor.aeotec_zw100_multisensor_6_temperature_6_1:
+      hidden: false
+      friendly_name: Rear Temperature
+    sensor.aeotec_zw100_multisensor_6_ultraviolet_2_27:
+      hidden: true
+    sensor.aeotec_zw100_multisensor_6_ultraviolet_6_27:
+      hidden: true
+    sensor.dht_sensor_humidity:
+      hidden: false
+      friendly_name: Main Humidity
+    sensor.dht_sensor_temperature:
+      hidden: false
+      friendly_name: Main Temperature
+    sensor.greenwave_powernode_1_port_energy_5_0:
+      hidden: false
+      friendly_name: Dehumidifier kWh
+    sensor.greenwave_powernode_1_port_power_5_8:
+      hidden: false
+      friendly_name: Dehumidifier W
+    sensor.greenwave_powernode_1_port_previous_reading_5_1:
+      hidden: true
+    sensor.greenwave_powernode_1_port_previous_reading_5_9:
+      hidden: true
+    switch.everspring_se812_siren_switch_3_0:
+      hidden: false
+      friendly_name: Siren
+    switch.greenwave_powernode_1_port_switch_5_0:
+      hidden: false
+      friendly_name: Dehumidifier
+
+
+notify:
+  -  name: Email
+     platform: smtp
+     server: !secret smtp_server
+     sender: !secret smtp_sender
+     username: !secret smtp_username
+     password: !secret smtp_password
+     recipient: !secret smtp_recipient
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Enables the frontend
+frontend:
+
+http:
+  # Uncomment this to add a password (recommended!)
+  api_password: !secret http_api_password
+  server_port: !secret http_server_port
+  # Uncomment this if you are using SSL or running in Docker etc
+  #base_url: example.duckdns.org:8123
+  ssl_certificate: !secret http_ssl_certificate
+  ssl_key: !secret http_ssl_key
+
+# Checks for available updates
+#updater:
+
+# Discover some devices automatically
+#discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+#conversation:
+
+# Enables support for tracking state changes over time.
+#history:
+
+# View all events in a logbook
+#logbook:
+
+# Track the sun
+#sun:
+
+# Weather Prediction
+#sensor:
+#  platform: yr
+
+# Text to speech
+#tts:
+#  platform: google
+
+
+zwave:
+  usb_path: /dev/ttyACM0
+
+mqtt:
+  broker: !secret mqtt_broker
+  port: !secret mqtt_port
+  client_id: home-assistant-1
+  username: !secret mqtt_username
+  password: !secret mqtt_password
+  birth_message:
+    topic: 'unit/status'
+    payload: 'online'
+    qos: 1
+    retain: true
+  will_message:
+    topic: 'unit/status'
+    payload: 'offline'
+    qos: 1
+    retain: true
+
+sensor:
+  platform: dht
+  sensor: DHT22
+  pin: 22
+  monitored_conditions:
+    - temperature
+    - humidity
+
+input_boolean:
+  arm_alarm:
+    name: Arm The Alarm
+    initial: off
+
+
+
+alarm_control_panel:
+  - platform: manual
+    name: Alarm
+    code: !secret alarm_control_panel_code
+    pending_time: 10
+    trigger_time: 10
+
+
+automation:
+-  alias: Publish MQTT temp and humidity
+   hide_entity: True
+   trigger:
+     platform: state
+     entity_id: sensor.dht_sensor_temperature, sensor.dht_sensor_humidity
+   action:
+     - service: mqtt.publish
+       data:
+         topic: "unit/temperature"
+         payload_template: "{{ states('sensor.dht_sensor_temperature') }}"    
+         retain: "true"
+     - service: mqtt.publish
+       data:
+         topic: "unit/humidity"
+         payload_template: "{{ states('sensor.dht_sensor_humidity') }}"
+         retain: "true"
+-  alias: Publish Motion Front
+   hide_entity: True
+   trigger:
+     platform: state
+     entity_id: sensor.aeotec_zw100_multisensor_6_burglar_2_10
+   action:
+     - service: mqtt.publish
+       data:
+         topic: "unit/frontmotion"
+         payload_template: "{{ states('sensor.aeotec_zw100_multisensor_6_burglar_2_10') }}"
+         retain: "true"
+-  alias: Publish Motion Rear 
+   hide_entity: True   
+   trigger:
+     platform: state
+     entity_id: sensor.aeotec_zw100_multisensor_6_burglar_6_10
+   action:
+     - service: mqtt.publish
+       data:
+         topic: "unit/rearmotion"
+         payload_template: "{{ states('sensor.aeotec_zw100_multisensor_6_burglar_6_10') }}"
+         retain: "true"
+-  alias: Publish Temp Front Door
+   hide_entity: True
+   trigger:
+     platform: state
+     entity_id: sensor.aeotec_zw100_multisensor_6_temperature_2_1
+   action:
+     - service: mqtt.publish
+       data:
+         topic: "unit/fronttemp"
+         payload_template: "{{ states('sensor.aeotec_zw100_multisensor_6_temperature_2_1') }}"
+         retain: "true"
+-  alias: Publish Temp Rear Door
+   hide_entity: True
+   trigger:
+     platform: state
+     entity_id: sensor.aeotec_zw100_multisensor_6_temperature_6_1
+   action:
+     - service: mqtt.publish
+       data:
+         topic: "unit/reartemp"
+         payload_template: "{{ states('sensor.aeotec_zw100_multisensor_6_temperature_6_1') }}"
+         retain: "true"
+-  alias: Publish Humidity Front Door
+   hide_entity: True
+   trigger:
+     platform: state
+     entity_id: sensor.aeotec_zw100_multisensor_6_relative_humidity_2_5
+   action:
+     - service: mqtt.publish
+       data:
+         topic: "unit/frontrh"
+         payload_template: "{{ states('sensor.aeotec_zw100_multisensor_6_relative_humidity_2_5') }}"
+         retain: "true"
+-  alias: Publish Lux Front Door
+   hide_entity: True
+   trigger:
+     platform: state
+     entity_id: sensor.aeotec_zw100_multisensor_6_luminance_2_3
+   action:
+     - service: mqtt.publish
+       data:
+         topic: "unit/frontlux"
+         payload_template: "{{ states('sensor.aeotec_zw100_multisensor_6_luminance_2_3') }}"
+         retain: "true"
+
+- alias: 'Trigger Alarm Front Sensor'
+  hide_entity: True
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.aeotec_zw100_multisensor_6_sensor_2_0
+      state: 'on'
+  condition:
+    condition: or
+    conditions:      
+      - condition: state
+        entity_id: alarm_control_panel.alarm
+        state: armed_away
+      - condition: state
+        entity_id: alarm_control_panel.alarm
+        state: armed_home
+  action:
+    - service: alarm_control_panel.alarm_trigger
+      entity_id: alarm_control_panel.alarm
+    - service: notify.email
+      data:
+        title: 'Unit Alarm Activated by Front Motion sensor'
+        message: 'Unit Alarm activated by front motion sensor'
+
+- alias: 'Trigger Alarm Rear Sensor'
+  hide_entity: True
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.aeotec_zw100_multisensor_6_sensor_6_0
+      state: 'on'
+  condition:
+    condition: or
+    conditions:
+      - condition: state
+        entity_id: alarm_control_panel.alarm
+        state: armed_away
+      - condition: state
+        entity_id: alarm_control_panel.alarm
+        state: armed_home
+  action:
+    - service: alarm_control_panel.alarm_trigger
+      entity_id: alarm_control_panel.alarm
+    - service: notify.email
+      data:
+        title: 'Unit Alarm Activated by Rear Motion sensor'
+        message: 'Unit Alarm activated by Rear motion sensor'
+
+
+
+
+
+- alias: 'Trigger Alarm Armed Home'
+  hide_entity: True
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.aeotec_zw100_multisensor_6_sensor_2_0
+      state: 'on'
+  condition:
+    - condition: state
+      entity_id: alarm_control_panel.alarm 
+      state: armed_home
+  action:
+    service: alarm_control_panel.alarm_trigger
+    entity_id: alarm_control_panel.alarm 
+
+- alias: 'Arm Alarm'
+  hide_entity: True
+  trigger:
+    platform: state
+    entity_id: input_boolean.arm_alarm
+    to: 'on'
+  action:
+    - service: alarm_control_panel.alarm_arm_away
+      entity_id: alarm_control_panel.alarm
+      data:
+        code: 6666
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.arm_alarm
+
+
+- alias: 'Alarm Armed'
+  hide_entity: True
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.alarm
+      to: 'armed_away'
+  action:
+    service: notify.email
+    data:
+      title: 'Unit Alarm Armed'
+      message: 'The alarm has been armed.'
+
+- alias: 'Alarm Triggered'
+  hide_entity: True
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.alarm
+      to: 'triggered'
+  action:
+    - service: switch.turn_on
+      entity_id: switch.everspring_se812_siren_switch_3_0
+- alias: 'Alarm Disarmed'
+  hide_entity: True
+  trigger:
+    - platform: state
+      entity_id: alarm_control_panel.alarm
+      to: 'disarmed'
+  action:
+    - service: switch.turn_off
+      entity_id: switch.everspring_se812_siren_switch_3_0
+    - service: notify.email
+      data:
+        title: 'Unit Alarm Disarmed'
+        message: 'Unit Alarm Disarmed' 
+
+zone:
+  name: School
+  latitude: !secret zone_lat
+  longitude: !secret zone_lon
+  radius: 200
+  icon: mdi:school
+zone 2:
+  name: Unit
+  latitude: !secret zone2_lat
+  longitude: !secret zone2_lon
+  radius: 100
+  icon: mdi:factory
+zone 3:
+  name: Home
+  latitude: !secret zone3_lat
+  longitude: !secret zone3_lon
+  radius: 100
+  icon: mdi:home-variant
+
+zone 4:
+  name: Castle
+  latitude: !secret zone4_lat
+  longitude: !secret zone4_lon
+  radius: 75
+  icon: mdi:beer
