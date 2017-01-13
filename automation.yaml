@@ -16,4 +16,4 @@
 - !include automation/alarmdisarmed.yaml
 
 - !include automation/nomotion.yaml
-- !include automation/nomotionnotify.yaml
+#- !include automation/nomotionnotify.yaml
