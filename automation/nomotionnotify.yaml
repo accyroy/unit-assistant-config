@@ -11,7 +11,7 @@ condition:
 action:
   - service: notify.email
     data:
-      title: 'Alert: No Motion, Alarm Disarmed'
+      title: 'Alert! No Motion, Alarm Disarmed'
       message: 'Unit alarm is currently disarmed and there has been no motion detected for the last hour.' 
   - service: input_boolean.turn_off
     entity_id: input_boolean.no_motion
