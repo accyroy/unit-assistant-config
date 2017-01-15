@@ -185,7 +185,7 @@ alarm_control_panel:
     trigger_time: 10
 
 
-automation: !include automation.yaml
+automation: !include_dir_list automation
 
 
 
