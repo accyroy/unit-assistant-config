@@ -1,9 +1,9 @@
-alias: 'No Motion Notify'
+alias: "No Motion Notify"
 hide_entity: True
 trigger:
   - platform: state
     entity_id: input_boolean.no_motion
-    to: 'on'
+    state: "on"
 condition:
   - platform: state
     entity_id: alarm_control_panel.alarm
