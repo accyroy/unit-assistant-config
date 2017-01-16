@@ -134,8 +134,11 @@ group:
 #sun:
 
 # Weather Prediction
-#sensor:
-#  platform: yr
+sensor:
+  - platform: yr
+  - platform: mqtt
+    name: "Home Status"
+    state_topic: "home/status"
 
 # Text to speech
 #tts:
@@ -187,7 +190,13 @@ alarm_control_panel:
 script: !include_dir_named scripts
 automation: !include_dir_list automation
 
-
+binary_sensor:
+  - platform: template
+    sensors:
+      home_online:
+        value_template: "{{ states.sensor.home_status.state == 'online' }}"
+        sensor_class: connectivity
+        friendly_name: "Limewood Status"
 
 zone:
   name: School
