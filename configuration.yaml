@@ -175,7 +175,7 @@ input_boolean: !include input_boolean.yaml
 shell_command:
   get_latest_config: bash /home/homeassistant/.homeassistant/gitpull.sh
 
-script: !include scripts.yaml 
+
 
 alarm_control_panel:
   - platform: manual
@@ -184,7 +184,7 @@ alarm_control_panel:
     pending_time: 10
     trigger_time: 10
 
-
+script: !include_dir_list scripts
 automation: !include_dir_list automation
 
 
