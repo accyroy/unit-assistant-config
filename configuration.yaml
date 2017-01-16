@@ -139,7 +139,12 @@ sensor:
   - platform: mqtt
     name: "Home Status"
     state_topic: "home/status"
-
+  - platform: dht
+    sensor: DHT22
+    pin: 22
+    monitored_conditions:
+      - temperature
+      - humidity
 # Text to speech
 #tts:
 #  platform: google
@@ -165,13 +170,6 @@ mqtt:
     qos: 1
     retain: true
 
-sensor:
-  platform: dht
-  sensor: DHT22
-  pin: 22
-  monitored_conditions:
-    - temperature
-    - humidity
 
 input_boolean: !include input_boolean.yaml
 
