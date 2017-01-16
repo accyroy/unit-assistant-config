@@ -184,7 +184,7 @@ alarm_control_panel:
     pending_time: 10
     trigger_time: 10
 
-script: !include_dir_list scripts
+script: !include_dir_named scripts
 automation: !include_dir_list automation
 
 
