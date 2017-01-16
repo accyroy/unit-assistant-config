@@ -7,7 +7,7 @@ trigger:
 condition:
   - platform: state
     entity_id: alarm_control_panel.alarm
-    state: 'disarmed'
+    state: disarmed
 action:
   - service: notify.email
     data:
