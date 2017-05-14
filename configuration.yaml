@@ -156,7 +156,6 @@ zwave:
 mqtt:
   broker: !secret mqtt_broker
   port: !secret mqtt_port
-  client_id: home-assistant-1
   username: !secret mqtt_username
   password: !secret mqtt_password
   certificate: /etc/ssl/certs/ca-certificates.crt
